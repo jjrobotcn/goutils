@@ -27,7 +27,7 @@ func TestMarshalUnmarshalJson(t *testing.T) {
 	}
 
 	var check TestJson
-	err = Unmarshal(b, check)
+	err = Unmarshal(b, &check)
 	if err != nil {
 		t.Error(err)
 		t.FailNow()
