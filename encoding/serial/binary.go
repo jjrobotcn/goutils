@@ -114,7 +114,7 @@ func (b *binaryImpl) MarshalSerial() ([]byte, error) {
 		}
 	}
 
-	return pack(ProtocolTypeBINARY, b.buf.Bytes())
+	return Pack(ProtocolTypeBINARY, b.buf.Bytes())
 }
 
 func (b *binaryImpl) marshalDefault(kind reflect.Kind, v reflect.Value) error {

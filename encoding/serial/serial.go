@@ -40,7 +40,7 @@ func Marshal(p ProtocolType, v interface{}) ([]byte, error) {
 func Unmarshal(data []byte, v interface{}) error {
 	var unmarshaler Unmarshaler
 
-	p := guessProtocolType(data)
+	p := GuessProtocolType(data)
 	switch p {
 	case ProtocolTypeJSON:
 		unmarshaler = &jsonImpl{v: v}
@@ -48,7 +48,7 @@ func Unmarshal(data []byte, v interface{}) error {
 		unmarshaler = &binaryImpl{v: v}
 	}
 
-	data, err := unpack(p, data)
+	data, err := Unpack(p, data)
 	if err != nil {
 		return err
 	}
@@ -56,9 +56,9 @@ func Unmarshal(data []byte, v interface{}) error {
 	return unmarshaler.UnmarshalSerial(data)
 }
 
-// guessProtocolType Guess raw data starts with JSON or BINARY protocol
+// GuessProtocolType Guess raw data starts with JSON or BINARY protocol
 // JSON is default
-func guessProtocolType(b []byte) ProtocolType {
+func GuessProtocolType(b []byte) ProtocolType {
 	// starts with {0x0f, 0x02}
 	if len(b) > 2 && bytes.Equal(b[:2], []byte{0x0f, 2}) {
 		return ProtocolTypeBINARY
@@ -66,8 +66,8 @@ func guessProtocolType(b []byte) ProtocolType {
 	return ProtocolTypeJSON
 }
 
-// pack Packs with protocol head, tail, data length
-func pack(p ProtocolType, b []byte) ([]byte, error) {
+// Pack Packs with protocol head, tail, data length
+func Pack(p ProtocolType, b []byte) ([]byte, error) {
 	out := new(bytes.Buffer)
 	// magic code head
 	out.WriteByte(0x0f)
@@ -86,8 +86,8 @@ func pack(p ProtocolType, b []byte) ([]byte, error) {
 	return out.Bytes(), nil
 }
 
-// unpack Unpacks protocol head, tail, data length, get data back
-func unpack(p ProtocolType, b []byte) ([]byte, error) {
+// Unpack Unpacks protocol head, tail, data length, get data back
+func Unpack(p ProtocolType, b []byte) ([]byte, error) {
 	if len(b) < 6 {
 		return nil, errors.New("invalid data")
 	}

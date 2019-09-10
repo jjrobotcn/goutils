@@ -15,5 +15,5 @@ func (j *jsonImpl) MarshalSerial() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return pack(ProtocolTypeJSON, b)
+	return Pack(ProtocolTypeJSON, b)
 }
