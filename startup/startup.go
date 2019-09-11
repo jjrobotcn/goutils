@@ -19,6 +19,8 @@ type Protocol struct {
 	Key  string `json:"key"`
 }
 
+// StartUp send up protocol boot serial device
+// if r is nil, this will ignore device up response or timeout failure
 func StartUp(r io.Reader, w io.Writer) error {
 	logger := log.WithField("handler", "startup.StartUp")
 
@@ -42,6 +44,13 @@ func StartUp(r io.Reader, w io.Writer) error {
 
 	// listen response
 	go func() {
+		// nil reader, ignore returns
+		if r == nil {
+			time.Sleep(time.Millisecond * 500)
+			errChan <- nil
+			return
+		}
+
 		err := listenStartUp(ctx, r)
 		select {
 		case <-ctx.Done():
