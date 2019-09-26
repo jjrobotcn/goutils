@@ -99,7 +99,7 @@ func Unpack(p ProtocolType, b []byte) ([]byte, error) {
 	}
 
 	// find magic code tail and valid
-	if !bytes.Equal(b[len(b)-2:], []byte{0x00, 0xf0}) {
+	if !bytes.Equal(b[len(b)-1:], []byte{0xf0}) {
 		return nil, errors.New("magic code tail is not valid")
 	}
 
